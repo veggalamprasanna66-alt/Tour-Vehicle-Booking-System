@@ -1,0 +1,1286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voyager | Premium Tour Vehicle Booking</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;500;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* -----------------------------------------------------------
+           1. VARIABLES & RESET
+        ----------------------------------------------------------- */
+        :root {
+            /* Palette: Luxury Navy & Gold */
+            --color-navy: #0a192f;
+            --color-navy-light: #172a46;
+            --color-gold: #d4af37;
+            --color-gold-hover: #b5952f;
+            --color-white: #ffffff;
+            --color-bg-gray: #f4f6f8;
+            --color-text: #333333;
+            --color-text-light: #666666;
+            --color-error: #e74c3c;
+            --color-success: #27ae60;
+            
+            /* Typography */
+            --font-heading: 'Playfair Display', serif;
+            --font-body: 'DM Sans', sans-serif;
+            
+            /* Spacing & Transition */
+            --container-width: 1200px;
+            --transition-speed: 0.3s;
+            --shadow-card: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 15px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-body);
+            color: var(--color-text);
+            background-color: var(--color-bg-gray);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        a { text-decoration: none; color: inherit; transition: var(--transition-speed); }
+        ul { list-style: none; }
+        button { cursor: pointer; font-family: var(--font-body); border: none; outline: none; }
+        
+        /* Utility Classes */
+        .container {
+            max-width: var(--container-width);
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .text-center { text-align: center; }
+        .hidden { display: none !important; }
+        .flex-center { display: flex; justify-content: center; align-items: center; }
+        
+        /* Fade In Animation */
+        .fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 28px;
+            border-radius: 4px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.9rem;
+            transition: all var(--transition-speed);
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--color-gold), #c5a028);
+            color: var(--color-white);
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+        }
+
+        .btn-outline {
+            border: 2px solid var(--color-white);
+            color: var(--color-white);
+            background: transparent;
+        }
+
+        .btn-outline:hover {
+            background: var(--color-white);
+            color: var(--color-navy);
+        }
+
+        /* Typography */
+        h1, h2, h3, h4 { font-family: var(--font-heading); color: var(--color-navy); line-height: 1.2; }
+        h2 { font-size: 2.5rem; margin-bottom: 1rem; }
+        
+        /* -----------------------------------------------------------
+           2. HEADER & NAVIGATION
+        ----------------------------------------------------------- */
+        header {
+            background-color: var(--color-navy);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+
+        .logo {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-white);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo i { color: var(--color-gold); }
+
+        .nav-menu {
+            display: flex;
+            gap: 25px;
+        }
+
+        .nav-link {
+            color: rgba(255,255,255,0.8);
+            font-size: 0.95rem;
+            font-weight: 500;
+            position: relative;
+            padding: 5px 0;
+            cursor: pointer;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--color-gold);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--color-gold);
+            transition: width 0.3s;
+        }
+
+        .nav-link:hover::after, .nav-link.active::after {
+            width: 100%;
+        }
+
+        .mobile-toggle {
+            display: none;
+            color: var(--color-white);
+            font-size: 1.5rem;
+            background: none;
+        }
+
+        /* -----------------------------------------------------------
+           3. PAGE SECTIONS (SPA ARCHITECTURE)
+        ----------------------------------------------------------- */
+        main {
+            min-height: calc(100vh - 70px - 300px); /* Viewport minus header/footer est */
+        }
+
+        .page-section {
+            padding: 60px 0;
+            display: none; /* Hidden by default */
+        }
+        
+        .page-section.active-page {
+            display: block; /* Show active */
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 90vh;
+            background: linear-gradient(rgba(10, 25, 47, 0.75), rgba(10, 25, 47, 0.6)), url('https://picsum.photos/seed/travel2024/1920/1080') no-repeat center center/cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: var(--color-white);
+        }
+
+        .hero h1 { color: var(--color-white); font-size: 3.5rem; margin-bottom: 20px; }
+        .hero p { font-size: 1.25rem; max-width: 600px; margin: 0 auto 40px; opacity: 0.9; }
+        
+        /* How It Works */
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .step-card {
+            background: var(--color-white);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: var(--shadow-card);
+            text-align: center;
+            transition: var(--transition-speed);
+        }
+
+        .step-card:hover { transform: translateY(-5px); }
+        .step-icon { font-size: 2.5rem; color: var(--color-gold); margin-bottom: 20px; }
+
+        /* Features */
+        .features-section { background-color: var(--color-navy); color: var(--color-white); }
+        .features-section h2 { color: var(--color-white); }
+        .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; margin-top: 40px; }
+        .feature-item { text-align: center; }
+        .feature-item i { color: var(--color-gold); font-size: 2rem; margin-bottom: 15px; }
+
+        /* Testimonials */
+        .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 40px; }
+        .testimonial-card { background: var(--color-white); padding: 30px; border-radius: 8px; box-shadow: var(--shadow-card); border-left: 4px solid var(--color-gold); }
+        .testimonial-text { font-style: italic; color: var(--color-text-light); margin-bottom: 20px; }
+        .user-info { display: flex; align-items: center; gap: 15px; }
+        .user-avatar { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; }
+
+        /* -----------------------------------------------------------
+           4. FORMS
+        ----------------------------------------------------------- */
+        .form-wrapper {
+            max-width: 700px;
+            margin: 0 auto;
+            background: var(--color-white);
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: var(--shadow-card);
+        }
+
+        .form-group { margin-bottom: 20px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+        label { display: block; margin-bottom: 8px; font-weight: 600; color: var(--color-navy); font-size: 0.9rem; }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: var(--font-body);
+            font-size: 1rem;
+            transition: border 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--color-gold);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+        }
+
+        /* Driver Form Section Dividers */
+        .form-divider {
+            border-top: 2px solid #eee;
+            margin: 30px 0 20px 0;
+            padding-top: 10px;
+            font-weight: 700;
+            color: var(--color-gold);
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+        }
+
+        /* Checkbox Styles */
+        .checkbox-group { display: flex; align-items: flex-start; gap: 10px; margin-top: 5px; }
+        .checkbox-group input { width: auto; margin-top: 4px; }
+        .checkbox-group label { font-weight: 400; cursor: pointer; color: var(--color-text); }
+
+        /* Return Trip Section (Initially Hidden) */
+        #returnTripSection {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 4px;
+            margin-top: 20px;
+            border: 1px dashed #ccc;
+        }
+
+        /* Login Tabs */
+        .login-tabs { display: flex; border-bottom: 2px solid #eee; margin-bottom: 30px; }
+        .tab-btn { flex: 1; padding: 15px; background: none; font-size: 1rem; font-weight: 600; color: var(--color-text-light); cursor: pointer; border-bottom: 3px solid transparent; }
+        .tab-btn.active { color: var(--color-navy); border-bottom-color: var(--color-gold); }
+
+        /* -----------------------------------------------------------
+           5. AVAILABLE TOURS
+        ----------------------------------------------------------- */
+        .filter-bar {
+            background: var(--color-white);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 40px;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            box-shadow: var(--shadow-card);
+            align-items: end;
+        }
+        
+        .filter-group { flex: 1; min-width: 200px; }
+
+        .tours-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; }
+
+        .tour-card {
+            background: var(--color-white);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--shadow-card);
+            transition: var(--transition-speed);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .tour-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-hover); }
+
+        .driver-header {
+            background-color: var(--color-navy-light);
+            color: var(--color-white);
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .driver-img { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--color-gold); object-fit: cover; }
+        .driver-rating { color: var(--color-gold); font-size: 0.85rem; margin-top: 5px; }
+
+        .card-body { padding: 20px; flex-grow: 1; }
+        .detail-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.9rem; color: var(--color-text-light); }
+        .detail-row span:last-child { font-weight: 600; color: var(--color-navy); }
+
+        .card-footer {
+            background: #f9f9f9;
+            padding: 15px 20px;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .price { font-size: 1.2rem; font-weight: 700; color: var(--color-gold-hover); }
+        .phone-link { color: var(--color-navy); font-weight: 700; text-decoration: none; display: flex; align-items: center; gap: 5px; font-size: 0.9rem; }
+        .phone-link:hover { color: var(--color-gold); }
+
+        /* -----------------------------------------------------------
+           6. CONTACT & FOOTER
+        ----------------------------------------------------------- */
+        .contact-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; }
+        .contact-info-box { background: var(--color-navy); color: var(--color-white); padding: 40px; border-radius: 8px; }
+        .info-row { display: flex; gap: 15px; margin-bottom: 25px; align-items: flex-start; }
+        .info-row i { color: var(--color-gold); font-size: 1.2rem; margin-top: 4px; }
+        .map-placeholder { width: 100%; height: 200px; background: #eee; display: flex; align-items: center; justify-content: center; margin-top: 20px; border-radius: 4px; }
+
+        footer { background-color: var(--color-navy); color: var(--color-white); padding: 60px 0 20px; margin-top: auto; }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; margin-bottom: 40px; }
+        .footer-col h4 { color: var(--color-white); margin-bottom: 20px; font-size: 1.2rem; }
+        .footer-links li { margin-bottom: 10px; }
+        .footer-links a { color: rgba(255,255,255,0.7); font-size: 0.9rem; }
+        .footer-links a:hover { color: var(--color-gold); padding-left: 5px; }
+        .copyright { text-align: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; color: rgba(255,255,255,0.5); font-size: 0.85rem; }
+
+        /* -----------------------------------------------------------
+           7. TOAST NOTIFICATION
+        ----------------------------------------------------------- */
+        #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
+        .toast { min-width: 300px; padding: 15px 20px; background: var(--color-white); color: var(--color-text); border-left: 5px solid; border-radius: 4px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); display: flex; align-items: center; justify-content: space-between; animation: slideIn 0.3s ease-out; }
+        .toast.success { border-color: var(--color-success); }
+        .toast.error { border-color: var(--color-error); }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .nav-menu { display: none; position: absolute; top: 70px; left: 0; width: 100%; background: var(--color-navy); flex-direction: column; padding: 20px; text-align: center; }
+            .nav-menu.active { display: flex; }
+            .mobile-toggle { display: block; }
+            .form-row, .contact-layout { grid-template-columns: 1fr; }
+            .filter-bar { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="container nav-container">
+            <a href="#" class="logo" onclick="app.router('home')">
+                <i class="fas fa-route"></i> VOYAGER
+            </a>
+            <button class="mobile-toggle" onclick="app.toggleMenu()"><i class="fas fa-bars"></i></button>
+            <nav>
+                <ul class="nav-menu" id="navMenu">
+                    <li><a class="nav-link active" onclick="app.router('home')">🏠 Home</a></li>
+                    <li><a class="nav-link" onclick="app.router('available-tours')">📋 Available Tours</a></li>
+                    <li><a class="nav-link" onclick="app.router('book-tour')">🚐 Book a Tour</a></li>
+                    <li><a class="nav-link" onclick="app.router('passenger-register')">👤 Passenger Register</a></li>
+                    <li><a class="nav-link" onclick="app.router('driver-register')">🧑‍✈️ Driver Register</a></li>
+                    <li><a class="nav-link" onclick="app.router('login')">🔑 Login</a></li>
+                    <li><a class="nav-link" onclick="app.router('contact')">📞 Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        
+        <!-- 1. HOME PAGE -->
+        <section id="home" class="page-section active-page fade-in">
+            <div class="hero">
+                <div class="container">
+                    <h1>Your Journey,<br>Perfectly Planned.</h1>
+                    <p>Connect with verified tour vehicle drivers for a safe, comfortable, and premium travel experience.</p>
+                    <div class="flex-center" style="gap: 20px;">
+                        <button class="btn btn-primary" onclick="app.router('book-tour')">Book a Tour</button>
+                        <button class="btn btn-outline" onclick="app.router('driver-register')">Register as Driver</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container section-padding">
+                <div class="text-center">
+                    <h2>How It Works</h2>
+                    <p>Three simple steps to your destination</p>
+                </div>
+                <div class="steps-grid">
+                    <div class="step-card">
+                        <div class="step-icon"><i class="fas fa-user-plus"></i></div>
+                        <h3>1. Register</h3>
+                        <p>Create your account quickly as a passenger or driver.</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-icon"><i class="fas fa-search-location"></i></div>
+                        <h3>2. Browse Tours</h3>
+                        <p>Explore available vehicles, routes, and verified drivers.</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-icon"><i class="fas fa-calendar-check"></i></div>
+                        <h3>3. Book & Go</h3>
+                        <p>Reserve your ride and enjoy the journey with peace of mind.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="features-section section-padding">
+                <div class="container">
+                    <div class="text-center">
+                        <h2>Why Choose Voyager?</h2>
+                    </div>
+                    <div class="feature-grid">
+                        <div class="feature-item">
+                            <i class="fas fa-shield-alt"></i>
+                            <h4>Safe Drivers</h4>
+                            <p>Background checked professionals.</p>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-mobile-alt"></i>
+                            <h4>Easy Booking</h4>
+                            <p>Seamless digital experience.</p>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-map-marked-alt"></i>
+                            <h4>GPS Tracked</h4>
+                            <p>Real-time location updates.</p>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-headset"></i>
+                            <h4>24/7 Support</h4>
+                            <p>Round-the-clock assistance.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container section-padding">
+                <div class="text-center">
+                    <h2>Traveler Stories</h2>
+                </div>
+                <div class="testimonials-grid">
+                    <div class="testimonial-card">
+                        <p class="testimonial-text">"The booking process was incredibly smooth. The driver was professional and the vehicle was top-notch."</p>
+                        <div class="user-info">
+                            <img src="https://picsum.photos/seed/user1/50/50" alt="User" class="user-avatar">
+                            <div><strong>Sarah Jenkins</strong><br><small>Tourist</small></div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card">
+                        <p class="testimonial-text">"Found a great last-minute ride for our group. Highly recommended for family trips!"</p>
+                        <div class="user-info">
+                            <img src="https://picsum.photos/seed/user2/50/50" alt="User" class="user-avatar">
+                            <div><strong>Michael Ross</strong><br><small>Group Leader</small></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. BOOK A TOUR -->
+        <section id="book-tour" class="page-section fade-in">
+            <div class="container">
+                <div class="text-center" style="margin-bottom: 30px;">
+                    <h2>Book a Tour</h2>
+                    <p>Fill in your travel details below</p>
+                </div>
+                <div class="form-wrapper">
+                    <form id="bookingForm" onsubmit="app.handleBooking(event)">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Full Name*</label>
+                                <input type="text" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Email Address*</label>
+                                <input type="email" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Phone Number*</label>
+                                <input type="tel" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Number of Passengers* (1-50)</label>
+                                <input type="number" min="1" max="50" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Pickup Location*</label>
+                                <input type="text" id="pickupLoc" required placeholder="City, Airport, Hotel">
+                            </div>
+                            <div class="form-group">
+                                <label>Destination*</label>
+                                <input type="text" id="destLoc" required placeholder="City or Landmark">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Travel Date*</label>
+                                <input type="date" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Travel Time*</label>
+                                <input type="time" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Vehicle Type*</label>
+                            <select required>
+                                <option value="">Select Vehicle</option>
+                                <option value="minibus">Mini Bus</option>
+                                <option value="coach">Coach</option>
+                                <option value="suv">SUV</option>
+                                <option value="luxury_van">Luxury Van</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Special Requests</label>
+                            <textarea rows="3" id="specialRequests" placeholder="e.g. Child seat, extra luggage..."></textarea>
+                        </div>
+
+                        <!-- Return Trip Logic -->
+                        <div class="form-group checkbox-group" style="border-top: 1px solid #eee; padding-top: 15px;">
+                            <input type="checkbox" id="returnTripCheck" onchange="app.toggleReturnTrip()">
+                            <label for="returnTripCheck" style="font-weight: 700;">I need a Return Trip</label>
+                        </div>
+
+                        <div id="returnTripSection" class="hidden">
+                            <h4 style="margin-bottom: 15px; color: var(--color-navy-light);">Return Details</h4>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Return Date*</label>
+                                    <input type="date">
+                                </div>
+                                <div class="form-group">
+                                    <label>Return Time*</label>
+                                    <input type="time">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Return Pickup*</label>
+                                    <input type="text" id="returnPickup">
+                                </div>
+                                <div class="form-group">
+                                    <label>Return Drop-off*</label>
+                                    <input type="text" id="returnDropoff">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Additional Return Notes</label>
+                                <textarea rows="2"></textarea>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Book Now</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. PASSENGER REGISTER -->
+        <section id="passenger-register" class="page-section fade-in">
+            <div class="container">
+                <div class="text-center" style="margin-bottom: 30px;">
+                    <h2>Passenger Registration</h2>
+                </div>
+                <div class="form-wrapper">
+                    <form onsubmit="app.handleRegister(event, 'Passenger')">
+                        <div class="form-group">
+                            <label>Full Name*</label>
+                            <input type="text" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Email Address*</label>
+                            <input type="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Phone Number*</label>
+                            <input type="tel" required>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Date of Birth*</label>
+                                <input type="date" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Gender*</label>
+                                <select required>
+                                    <option value="">Select</option>
+                                    <option>Male</option>
+                                    <option>Female</option>
+                                    <option>Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Home Address*</label>
+                            <input type="text" required>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Emergency Contact Name*</label>
+                                <input type="text" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Emergency Contact Phone*</label>
+                                <input type="tel" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Password*</label>
+                                <input type="password" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Confirm Password*</label>
+                                <input type="password" required>
+                            </div>
+                        </div>
+                        <div class="form-group checkbox-group">
+                            <input type="checkbox" required id="passTerms">
+                            <label for="passTerms">I agree to Terms & Conditions</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">Create Account</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. DRIVER REGISTER -->
+        <section id="driver-register" class="page-section fade-in">
+            <div class="container">
+                <div class="text-center" style="margin-bottom: 30px;">
+                    <h2>Driver Registration</h2>
+                    <p>Join our fleet and start earning</p>
+                </div>
+                <div class="form-wrapper">
+                    <form onsubmit="app.handleRegister(event, 'Driver')">
+                        <!-- Personal Info -->
+                        <div class="form-divider">Personal Information</div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Full Name*</label>
+                                <input type="text" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Email Address*</label>
+                                <input type="email" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>📞 Phone Number* <small style="font-weight: normal; color: var(--color-error);">(This number will be visible to passengers for direct contact)</small></label>
+                            <input type="tel" required placeholder="+91 98765 43210" style="border-color: var(--color-gold);">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Date of Birth*</label>
+                                <input type="date" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Gender*</label>
+                                <select required>
+                                    <option>Male</option>
+                                    <option>Female</option>
+                                    <option>Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Profile Photo Upload</label>
+                            <input type="file" accept="image/*">
+                        </div>
+
+                        <!-- Vehicle Info -->
+                        <div class="form-divider">Vehicle Information</div>
+                        <div class="form-group">
+                            <label>Vehicle Type*</label>
+                            <select required>
+                                <option value="">Select Type</option>
+                                <option>Mini Bus</option>
+                                <option>Coach</option>
+                                <option>SUV</option>
+                                <option>Luxury Van</option>
+                                <option>Shuttle</option>
+                            </select>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Make & Model*</label>
+                                <input type="text" required placeholder="e.g. Toyota Hiace">
+                            </div>
+                            <div class="form-group">
+                                <label>Vehicle Year*</label>
+                                <input type="number" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Plate Number*</label>
+                                <input type="text" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Seating Capacity*</label>
+                                <input type="number" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Vehicle Color*</label>
+                                <input type="text" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Vehicle Photo Upload</label>
+                                <input type="file" accept="image/*">
+                            </div>
+                        </div>
+
+                        <!-- License Info -->
+                        <div class="form-divider">License & Documentation</div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>License Number*</label>
+                                <input type="text" required>
+                            </div>
+                            <div class="form-group">
+                                <label>License Expiry Date*</label>
+                                <input type="date" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>License Class*</label>
+                                <input type="text" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Years of Experience*</label>
+                                <input type="number" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>National ID / Passport Number*</label>
+                            <input type="text" required>
+                        </div>
+
+                        <!-- Tour Details -->
+                        <div class="form-divider">Tour Details</div>
+                        <div class="form-group">
+                            <label>Areas/Routes Covered*</label>
+                            <input type="text" required placeholder="e.g. Mumbai, Pune, Lonavala">
+                        </div>
+                        <div class="form-group">
+                            <label>Available Days*</label>
+                            <div class="checkbox-group">
+                                <input type="checkbox" checked> Mon
+                                <input type="checkbox" checked> Tue
+                                <input type="checkbox" checked> Wed
+                                <input type="checkbox" checked> Thu
+                                <input type="checkbox" checked> Fri
+                                <input type="checkbox" checked> Sat
+                                <input type="checkbox" checked> Sun
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Price Per Km / Fixed Rate*</label>
+                            <input type="text" required placeholder="e.g. ₹25/km">
+                        </div>
+                        <div class="form-group">
+                            <label>Bio / About</label>
+                            <textarea rows="3"></textarea>
+                        </div>
+
+                        <!-- Account Setup -->
+                        <div class="form-divider">Account Setup</div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Password*</label>
+                                <input type="password" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Confirm Password*</label>
+                                <input type="password" required>
+                            </div>
+                        </div>
+                        <div class="form-group checkbox-group">
+                            <input type="checkbox" required>
+                            <label>I agree to Driver Terms & Conditions</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">Register as Driver</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. LOGIN -->
+        <section id="login" class="page-section fade-in">
+            <div class="container">
+                <div class="text-center" style="margin-bottom: 30px;">
+                    <h2>Welcome Back</h2>
+                </div>
+                <div class="form-wrapper" style="max-width: 500px;">
+                    <div class="login-tabs">
+                        <button class="tab-btn active" id="tabPass" onclick="app.switchLogin('passenger')">Passenger Login</button>
+                        <button class="tab-btn" id="tabDriver" onclick="app.switchLogin('driver')">Driver Login</button>
+                    </div>
+                    <form onsubmit="app.handleLogin(event)">
+                        <div class="form-group">
+                            <label>Email Address</label>
+                            <input type="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" required>
+                        </div>
+                        <div class="form-group checkbox-group">
+                            <input type="checkbox" id="remember">
+                            <label for="remember">Remember Me</label>
+                            <a href="#" style="margin-left: auto; color: var(--color-gold-hover); font-size: 0.9rem;">Forgot Password?</a>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">Login</button>
+                        <div class="text-center" style="margin-top: 20px; font-size: 0.9rem;">
+                            Don't have an account? <a href="#" onclick="app.router('passenger-register')" style="color: var(--color-gold-hover); font-weight: 600;">Register here</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. AVAILABLE TOURS -->
+        <section id="available-tours" class="page-section fade-in">
+            <div class="container">
+                <div class="text-center" style="margin-bottom: 30px;">
+                    <h2>Available Tours</h2>
+                </div>
+
+                <!-- Filter Bar -->
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <label>Vehicle Type</label>
+                        <select id="filterType" onchange="app.renderTours()">
+                            <option value="all">All Types</option>
+                            <option value="minibus">Mini Bus</option>
+                            <option value="suv">SUV</option>
+                            <option value="coach">Coach</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Route</label>
+                        <select id="filterRoute" onchange="app.renderTours()">
+                            <option value="all">All Routes</option>
+                            <option value="mumbai">Mumbai Routes</option>
+                            <option value="pune">Pune Routes</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Price Range</label>
+                        <select id="filterPrice" onchange="app.renderTours()">
+                            <option value="all">Any Price</option>
+                            <option value="low">Under ₹3,000</option>
+                            <option value="high">Above ₹3,000</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Drivers Grid -->
+                <div class="tours-grid" id="toursGrid">
+                    <!-- Cards injected via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. CONTACT -->
+        <section id="contact" class="page-section fade-in">
+            <div class="container">
+                <div class="text-center" style="margin-bottom: 30px;">
+                    <h2>Contact Support</h2>
+                </div>
+                <div class="contact-layout">
+                    <div class="contact-info-box">
+                        <h3 style="color: white; margin-bottom: 20px;">Get In Touch</h3>
+                        <div class="info-row">
+                            <i class="fas fa-phone-alt"></i>
+                            <div>
+                                <h4 style="color: var(--color-gold); font-size: 1rem;">Phone</h4>
+                                <p>+91 98765 43210</p>
+                            </div>
+                        </div>
+                        <div class="info-row">
+                            <i class="fas fa-envelope"></i>
+                            <div>
+                                <h4 style="color: var(--color-gold); font-size: 1rem;">Email</h4>
+                                <p>support@voyager.com</p>
+                            </div>
+                        </div>
+                        <div class="info-row">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <div>
+                                <h4 style="color: var(--color-gold); font-size: 1rem;">Office</h4>
+                                <p>123 Travel Tower, Mumbai, India</p>
+                            </div>
+                        </div>
+                        <div class="map-placeholder">
+                            <i class="fas fa-map" style="font-size: 2rem; color: #999;"></i>
+                            <span style="margin-left: 10px; color: #999;">Map Embed Placeholder</span>
+                        </div>
+                    </div>
+
+                    <div class="form-wrapper" style="margin:0; box-shadow:none; border: 1px solid #eee;">
+                        <form onsubmit="app.handleContact(event)">
+                            <div class="form-group">
+                                <label>Full Name*</label>
+                                <input type="text" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Email*</label>
+                                <input type="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Subject*</label>
+                                <select required>
+                                    <option value="">Select Subject</option>
+                                    <option>Booking Issue</option>
+                                    <option>Driver Complaint</option>
+                                    <option>General Inquiry</option>
+                                    <option>Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Message*</label>
+                                <textarea rows="5" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Send Message</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="logo" style="margin-bottom: 15px;">
+                        <i class="fas fa-route"></i> VOYAGER
+                    </div>
+                    <p style="opacity: 0.7; font-size: 0.9rem;">Premium tour vehicle booking for modern travelers. Safe, reliable, and luxurious.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" onclick="app.router('home')">Home</a></li>
+                        <li><a href="#" onclick="app.router('available-tours')">Available Tours</a></li>
+                        <li><a href="#" onclick="app.router('book-tour')">Book a Tour</a></li>
+                        <li><a href="#" onclick="app.router('contact')">Contact Support</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Join Us</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" onclick="app.router('passenger-register')">Passenger Register</a></li>
+                        <li><a href="#" onclick="app.router('driver-register')">Driver Register</a></li>
+                        <li><a href="#" onclick="app.router('login')">Login</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Follow Us</h4>
+                    <div style="font-size: 1.5rem; display: flex; gap: 15px;">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2024 Voyager Tour Booking System. All Rights Reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast Container -->
+    <div id="toast-container"></div>
+
+    <script>
+        /**
+         * VOYAGER APP LOGIC
+         * Handles routing, form interactions, and state management.
+         */
+        const app = {
+            // Sample Driver Data
+            drivers: [
+                {
+                    id: 1,
+                    name: "Rajesh Kumar",
+                    photo: "https://picsum.photos/seed/rajesh/100/100",
+                    rating: 4.8,
+                    vehicle: "14-Seat Mini Bus",
+                    route: "Mumbai → Lonavala",
+                    routeKey: "mumbai",
+                    phone: "+91 98200 11234",
+                    price: "₹2,500/trip",
+                    priceVal: 2500
+                },
+                {
+                    id: 2,
+                    name: "Priya Nair",
+                    photo: "https://picsum.photos/seed/priya/100/100",
+                    rating: 4.9,
+                    vehicle: "Luxury SUV",
+                    route: "Pune → Mahabaleshwar",
+                    routeKey: "pune",
+                    phone: "+91 91300 55678",
+                    price: "₹3,200/trip",
+                    priceVal: 3200
+                },
+                {
+                    id: 3,
+                    name: "Amir Shaikh",
+                    photo: "https://picsum.photos/seed/amir/100/100",
+                    rating: 4.7,
+                    vehicle: "30-Seat Coach",
+                    route: "Mumbai → Goa",
+                    routeKey: "mumbai",
+                    phone: "+91 87900 99012",
+                    price: "₹8,000/trip",
+                    priceVal: 8000
+                }
+            ],
+
+            // 1. ROUTER: Handle Page Navigation
+            router: function(pageId) {
+                // Hide all sections
+                document.querySelectorAll('.page-section').forEach(sec => {
+                    sec.classList.remove('active-page');
+                    sec.classList.remove('fade-in'); // Reset animation
+                });
+
+                // Show target section
+                const target = document.getElementById(pageId);
+                if (target) {
+                    target.classList.add('active-page');
+                    void target.offsetWidth; // Trigger reflow for animation
+                    target.classList.add('fade-in');
+                    window.scrollTo(0, 0);
+                }
+
+                // Update Nav Active State
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('onclick').includes(pageId)) {
+                        link.classList.add('active');
+                    }
+                });
+
+                // Close mobile menu if open
+                document.getElementById('navMenu').classList.remove('active');
+            },
+
+            // Toggle Mobile Menu
+            toggleMenu: function() {
+                document.getElementById('navMenu').classList.toggle('active');
+            },
+
+            // 2. NOTIFICATIONS: Custom Toast System
+            showToast: function(msg, type = 'success') {
+                const container = document.getElementById('toast-container');
+                const toast = document.createElement('div');
+                toast.className = `toast ${type}`;
+                toast.innerHTML = `
+                    <span>${msg}</span>
+                    <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
+                `;
+                container.appendChild(toast);
+                
+                // Remove after 3 seconds
+                setTimeout(() => {
+                    toast.style.opacity = '0';
+                    setTimeout(() => toast.remove(), 300);
+                }, 3000);
+            },
+
+            // 3. BOOKING LOGIC: Return Trip Toggle
+            toggleReturnTrip: function() {
+                const isChecked = document.getElementById('returnTripCheck').checked;
+                const returnSection = document.getElementById('returnTripSection');
+                
+                if (isChecked) {
+                    returnSection.classList.remove('hidden');
+                    // Auto-fill locations
+                    const pickup = document.getElementById('pickupLoc').value;
+                    const dest = document.getElementById('destLoc').value;
+                    document.getElementById('returnPickup').value = dest;
+                    document.getElementById('returnDropoff').value = pickup;
+                } else {
+                    returnSection.classList.add('hidden');
+                }
+            },
+
+            // 4. RENDER DRIVERS: Dynamic Grid & Filtering
+            renderTours: function() {
+                const typeFilter = document.getElementById('filterType').value;
+                const routeFilter = document.getElementById('filterRoute').value;
+                const priceFilter = document.getElementById('filterPrice').value;
+                const grid = document.getElementById('toursGrid');
+                
+                grid.innerHTML = '';
+
+                const filtered = this.drivers.filter(d => {
+                    const matchType = typeFilter === 'all' || d.vehicle.toLowerCase().includes(typeFilter);
+                    const matchRoute = routeFilter === 'all' || d.routeKey === routeFilter;
+                    
+                    let matchPrice = true;
+                    if (priceFilter === 'low') matchPrice = d.priceVal < 3000;
+                    if (priceFilter === 'high') matchPrice = d.priceVal >= 3000;
+
+                    return matchType && matchRoute && matchPrice;
+                });
+
+                if (filtered.length === 0) {
+                    grid.innerHTML = '<p class="text-center" style="grid-column: 1/-1;">No tours match your criteria.</p>';
+                    return;
+                }
+
+                filtered.forEach(driver => {
+                    const card = `
+                        <div class="tour-card">
+                            <div class="driver-header">
+                                <img src="${driver.photo}" class="driver-img" alt="${driver.name}">
+                                <div>
+                                    <h3 style="color: white; font-size: 1.1rem; margin:0;">${driver.name}</h3>
+                                    <div class="driver-rating"><i class="fas fa-star"></i> ${driver.rating}</div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="detail-row">
+                                    <span>Vehicle</span>
+                                    <span>${driver.vehicle}</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span>Route</span>
+                                    <span>${driver.route}</span>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <a href="tel:${driver.phone.replace(/\s/g, '')}" class="phone-link">
+                                    <i class="fas fa-phone-alt"></i> ${driver.phone}
+                                </a>
+                                <span class="price">${driver.price}</span>
+                            </div>
+                            <div style="padding: 15px 20px 0;">
+                                <button class="btn btn-primary" style="width: 100%; font-size: 0.8rem;" onclick="app.preBook('${driver.name}')">Book This Driver</button>
+                            </div>
+                        </div>
+                    `;
+                    grid.innerHTML += card;
+                });
+            },
+
+            // 5. PRE-FILL BOOKING
+            preBook: function(driverName) {
+                this.router('book-tour');
+                document.getElementById('specialRequests').value = `Booking preference: ${driverName}`;
+                this.showToast(`Selected ${driverName}. Please complete your details.`, 'success');
+            },
+
+            // 6. FORM SUBMISSIONS
+            handleBooking: function(e) {
+                e.preventDefault();
+                this.showToast('Booking request submitted successfully!', 'success');
+                e.target.reset();
+                this.toggleReturnTrip(); // Reset return fields visibility
+            },
+
+            handleRegister: function(e, type) {
+                e.preventDefault();
+                const p1 = e.target.querySelectorAll('input[type="password"]')[0].value;
+                const p2 = e.target.querySelectorAll('input[type="password"]')[1].value;
+
+                if (p1 !== p2) {
+                    this.showToast('Passwords do not match!', 'error');
+                    return;
+                }
+                this.showToast(`${type} account created! Redirecting to login...`, 'success');
+                setTimeout(() => this.router('login'), 1500);
+                e.target.reset();
+            },
+
+            handleLogin: function(e) {
+                e.preventDefault();
+                this.showToast('Login successful! Welcome back.', 'success');
+                setTimeout(() => this.router('home'), 1000);
+                e.target.reset();
+            },
+
+            handleContact: function(e) {
+                e.preventDefault();
+                this.showToast('Message sent! Support will contact you shortly.', 'success');
+                e.target.reset();
+            },
+
+            // Login Tab Switcher
+            switchLogin: function(type) {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.getElementById(type === 'passenger' ? 'tabPass' : 'tabDriver').classList.add('active');
+                this.showToast(`Switched to ${type} login`, 'success');
+            }
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            app.renderTours();
+        });
+
+    </script>
+</body>
+</html>
